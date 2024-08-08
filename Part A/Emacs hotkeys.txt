@@ -1,0 +1,36 @@
+C - ctrl
+M - alt
+
+Save - C-x C-s
+
+SML - C-c C-s 
+
+Copy - M-w
+Paste - C-y
+
+Undo - C-x u
+Redo - C-M-_
+
+New window below - C-x 2
+New window right - C-x 3
+
+Cancel command - C-g
+
+Change buffer display - C-x right/left
+
+Switch between buffers - C-x o
+
+Run file: use "hw3.sml"
+
+Select all: C-x h
+
+Indent region: C-M-\	
+
+	C-a	Move to beginning of line
+	C-e	Move to end of line
+
+Kill buffer - C-x k
+
+SML: 
+Previous command - M-p
+Next command - M-n

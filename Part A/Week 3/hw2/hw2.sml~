@@ -1,0 +1,207 @@
+(* Dan Grossman, Coursera PL, HW2 Provided Code *)
+
+(* if you use this function to compare two strings (returns true if the same
+   string), then you avoid several of the functions in problem 1 having
+   polymorphic types that may be confusing *)
+fun same_string(s1 : string, s2 : string) =
+    s1 = s2
+
+(* put your solutions for problem 1 here *)
+
+(*1a*)
+fun all_except_option(x,ys) =
+    let
+	fun helper_aeo (x,ys,acc,isInList) =
+	    case ys of
+		[] => ([],false)
+	      | y::ys' => if same_string(x,y) then (acc@ys',true) else helper_aeo(x,ys',acc@[y],isInList)
+	val (acc,isInList) = helper_aeo(x,ys,[],false)
+    in
+	if isInList then SOME acc else NONE
+    end
+	
+(*1b*)
+fun get_substitutions1 (subs,s) =
+    case subs of
+	[] => []
+      | sub::subs' =>
+	case all_except_option(s,sub) of
+	    NONE => get_substitutions1(subs', s) 
+	  | SOME subList => subList@get_substitutions1(subs',s) 
+						      
+(*1c*)
+fun get_substitutions2 (subs,s) =
+    let
+	fun gs2_helper(subs,acc) =
+	    case subs of
+		[] => acc 
+	      | sub::subs' =>
+		case all_except_option(s,sub) of
+		    NONE => gs2_helper(subs',acc) 
+		  | SOME subList => gs2_helper(subs',acc@subList)
+    in
+	gs2_helper(subs,[])
+    end
+
+(*1d*)
+fun similar_names (subs,fullName) =
+    let
+	val {first=x,middle=y,last=z} = fullName
+	fun generateNames(firstNames) =
+	    case firstNames of
+		[] => [] 
+	      | firstName::firstNames' => {first=firstName,middle=y,last=z}::generateNames(firstNames')
+    in
+	fullName::generateNames(get_substitutions1(subs,x))
+    end
+	
+
+(* you may assume that Num is always used with values 2, 3, ..., 10
+   though it will not really come up *)
+datatype suit = Clubs | Diamonds | Hearts | Spades
+datatype rank = Jack | Queen | King | Ace | Num of int 
+type card = suit * rank
+
+datatype color = Red | Black
+datatype move = Discard of card | Draw 
+
+exception IllegalMove
+
+(* put your solutions for problem 2 here *)
+(*2a*)
+fun card_color (card) =
+    case card of
+	(Clubs,_) => Black
+      | (Spades,_) => Black
+      | (Hearts,_) => Red
+      | (Diamonds,_) => Red   
+
+(*2b*)
+fun card_value (card) =
+    case card of
+	(_,Num n) => n
+      | (_,Ace) => 11 
+      | _ => 10  
+
+(*2c*)
+fun remove_card (cs,c,e) =
+    let
+	fun remove_card_helper (cs) =
+	    case cs of
+		[] => raise e 
+	      | currentCard::cs' => if currentCard = c then cs' else currentCard::remove_card_helper(cs')
+    in
+	remove_card_helper (cs)
+    end
+
+(*2d*)
+fun all_same_color (cards) =
+    case cards of
+	[] => true
+      | _::[] => true
+      | card1::card2::cards' => (card_color(card1) = card_color(card2) andalso all_same_color (card2::cards'))
+
+(*2e*)
+fun sum_cards (cards) =
+    let
+	fun sum_cards_helper(cards,sum) =
+	    case cards of
+		[] => sum
+	      | card::cards' => sum_cards_helper(cards',sum+card_value(card))
+    in
+	sum_cards_helper(cards,0)
+    end
+
+(*2f*)
+fun score (cards,goal) =
+    let
+	val sum = sum_cards(cards)
+	val prelim_score = if sum > goal then 3 * (sum - goal) else goal-sum
+	val final_score = if all_same_color (cards) then prelim_score div 2 else prelim_score
+    in
+	final_score
+    end
+
+(*2g*)
+fun officiate (cards, moves, goal) =
+    let
+	fun off_helper (cards, moves, heldCards) =
+	    case moves of
+		[] => score(heldCards,goal) 
+	      | move::moves' =>
+		
+		case move of
+		    Discard n =>
+		    off_helper(cards, moves', remove_card(heldCards,n,IllegalMove))
+				    
+		  | Draw =>
+		    case cards of
+			[] => score(heldCards,goal)
+		      | card::cards' =>
+			let
+			    val currentScore = score(card::heldCards,goal)
+			in
+			    if currentScore > goal
+			    then currentScore
+			    else off_helper(cards',moves',card::heldCards)
+			end								   			    
+    in
+	off_helper(cards,moves, [])
+    end
+
+(*3a*)
+fun score_challenge (cards,goal) =
+    let
+	fun score_for_sum (sum) =
+	    let
+		val prelim_score = if sum > goal then 3 * (sum - goal) else goal-sum
+		val final_score = if all_same_color (cards) then prelim_score div 2 else prelim_score
+	    in
+		final_score
+	    end
+	fun countOfAces (cards) =
+	    case cards of
+		[] => 0 
+	      | card::cards' => case card of
+				    (_,Ace)=> 1+countOfAces(cards')
+				   |_ => countOfAces(cards')
+	fun allSums (sum,acesCount) =
+	    if acesCount = 0 then [sum] else sum::(allSums(sum-10,acesCount-1))
+						   
+	val sum = sum_cards(cards)
+	val initialScore = score_for_sum(sum)
+	val acesCount = countOfAces(cards)
+	val allSums = allSums(sum,acesCount)
+	fun minScore (allSums,currentScore) =
+	    case allSums of
+		[] => currentScore 
+	      | currentSum::allSums' => minScore(allSums', if score_for_sum(currentSum) < currentScore then score_for_sum(currentSum) else currentScore) 
+    in
+	minScore(allSums,initialScore)
+    end
+
+fun officiate_challenge (cards, moves, goal) =
+    let
+	fun off_helper (cards, moves, heldCards) =
+	    case moves of
+		[] => score_challenge(heldCards,goal) 
+	      | move::moves' =>
+		
+		case move of
+		    Discard n =>
+		    off_helper(cards, moves', remove_card(heldCards,n,IllegalMove))
+			      
+		  | Draw =>
+		    case cards of
+			[] => score_challenge(heldCards,goal)
+		      | card::cards' =>
+			let
+			    val currentScore = score_challenge(card::heldCards,goal)
+			in
+			    if currentScore > goal
+			    then currentScore
+			    else off_helper(cards',moves',card::heldCards)
+			end								   			    
+    in
+	off_helper(cards,moves, [])
+    end
