@@ -26,9 +26,8 @@ fun number_in_month (listOfDates : (int*int*int) list, neededMonth : int) =
 
 (*3*)	    
 fun number_in_months (listOfDates : (int*int*int) list, listOfNeededMonths : int list) =
-    if null listOfDates orelse null listOfNeededMonths
-    then 0
-    else number_in_month(listOfDates, hd(listOfNeededMonths)) + number_in_months(listOfDates, tl(listOfNeededMonths))
+    foldl ( fn (s,x) => x + number_in_month (listOfDates,s) ) 0 listOfNeededMonths
+
 
 (*4*)									
 fun dates_in_month (listOfDates : (int*int*int) list, neededMonth : int) =

@@ -3,7 +3,7 @@
 (* To run the test, add a new line to the top of this file: use "homeworkname.sml"; *)
 (* All the tests should evaluate to true. For example, the REPL should say: val test1 = true : bool *)
 
-use "hw2BY.sml";
+use "hw2_higher.sml";
     
 val test1a1 = all_except_option ("string", ["string"]) = SOME []
 val test1a2 = all_except_option ("string", ["string","a","b"]) = SOME ["a","b"]
@@ -59,7 +59,7 @@ val test2g2 = officiate ([(Clubs,Ace),(Spades,Ace),(Clubs,Ace),(Spades,Ace)],
 val test2g3 = ((officiate([(Clubs,Jack),(Spades,Num(8))],
                           [Draw,Discard(Hearts,Jack)],
                           42);
-		false) 
+		false)
                handle IllegalMove => true)
 
 val test2g4 = officiate ([(Clubs,Ace)],[Draw,Discard(Clubs,Ace)],20) = 10
