@@ -3,7 +3,7 @@
 (* To run the test, add a new line to the top of this file: use "homeworkname.sml"; *)
 (* All the tests should evaluate to true. For example, the REPL should say: val test1 = true : bool *)
 
-use "hw3.sml";
+use "hw3d.sml";
     
 val test1a = only_capitals ["A","B","C"] = ["A","B","C"]
 val test1b = only_capitals ["ant","Bed","cant"] = ["Bed"]
@@ -56,6 +56,9 @@ val test10a = check_pat (Variable("x")) = true
 val test10b = check_pat (TupleP[Variable("x"),Variable("x")]) = false
 val test10c = check_pat (Wildcard) = true
 val test10d = check_pat (TupleP[Variable("x"),Variable("y")]) = true
+val test10e = check_pat (ConstructorP ("hi",TupleP[Variable "x",Variable "x"])) = false
+val test10f = check_pat ( ConstructorP ("hi",TupleP[Variable "x",ConstructorP ("yo",TupleP[Variable "x",UnitP])])) = false
+								    
 
 								    
 

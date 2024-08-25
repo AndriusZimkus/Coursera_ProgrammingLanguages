@@ -43,7 +43,7 @@ fun only_capitals stringList =
 (*2*)
 fun longest_string1 stringList =
     foldl
-	(fn (s,x) => if String.size s > String.size x then s else x)
+	(fn (s,sofar) => if String.size s > String.size sofar then s else sofar)
 	""
 	stringList
 
@@ -107,8 +107,7 @@ fun count_wildcards patternToCheck =
 
 (*9b*)
 fun count_wild_and_variable_lengths patternToCheck =
-    count_wildcards patternToCheck
-    + g(fn() => 0) (fn(x) => String.size(x)) patternToCheck
+    g(fn() => 1) (fn(x) => String.size(x)) patternToCheck
 
 (*9c*)
 fun count_some_var (s,patternToCheck) =
@@ -122,7 +121,9 @@ fun check_pat patternToCheck =
 		    Wildcard   => []
 		  | Variable x => [x]
 		  | TupleP ps  => List.foldl ( fn (p,i) => i @ ( getStringListFromPattern  p) ) [] ps
-		  | _          => []
+		  | ConstructorP(s,x) => getStringListFromPattern(x)
+		  | _ => [] 
+								 
 
 	fun hasRepeatsStringList xs =
 	    case xs of
