@@ -32,3 +32,4 @@
 
 (define sixteen1 (pow1 4 2))
 (define sixteen2 ((pow2 4) 2)) ; brackets matter - first expression return a function with one argument
+
