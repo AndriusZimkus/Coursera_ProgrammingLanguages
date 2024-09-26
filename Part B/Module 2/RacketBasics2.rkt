@@ -27,3 +27,6 @@
           xs))
 
 (define foo (add-one-to-list (list 1 2 3)))
+
+(define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
+
