@@ -27,7 +27,28 @@
 
 
 ; exercise - no assumption of argument
-(define (sum3 xs)
+(define (sum2a xs)
   (if (not (list? xs))
       0
       (sum2 xs)))
+
+
+; cond
+(define (sum3 xs)
+  (cond [(null? xs) 0]
+        [(number? (car xs)) (+ (car xs) (sum3 (cdr xs)))]
+        [#t (+ (sum3 (car xs)) (sum3 (cdr xs)))]))
+
+
+(define (sum4 xs)
+  (cond [(null? xs) 0]
+        [(number? (car xs)) (+ (car xs) (sum4 (cdr xs)))]
+        [(list? xs) (+ (sum4 (car xs)) (sum4 (cdr xs)))]
+        [#t (sum4 (cdr xs))]))
+
+(if 9 #t #f)
+(if 0 #t #f)
+; only thing in racket is false:
+(if #f #t #f)
+
+
