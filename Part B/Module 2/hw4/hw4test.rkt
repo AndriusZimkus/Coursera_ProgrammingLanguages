@@ -11,6 +11,9 @@
 
 ;; Helper functions
 (define ones (lambda () (cons 1 ones)))
+(define powers-of-two
+  (letrec ([f (lambda (x) (cons x (lambda () (f (* x 2)))))])
+    (lambda () (f 2))))
 (define a 2)
 
 (define tests
@@ -19,30 +22,39 @@
    
    ; sequence test
    (check-equal? (sequence 0 5 1) (list 0 1 2 3 4 5) "Sequence test")
+   (check-equal? (sequence 3 11 2) (list 3 5 7 9 11) "Sequence test")
+   (check-equal? (sequence 3 8 3) (list 3 6) "Sequence test")
+   (check-equal? (sequence 3 2 1) null "Sequence test")
 
    ; string-append-map test
-   ;(check-equal? (string-append-map 
-     ;             (list "dan" "dog" "curry" "dog2") 
-      ;            ".jpg") '("dan.jpg" "dog.jpg" "curry.jpg" "dog2.jpg") "string-append-map test")
+   (check-equal? (string-append-map 
+                  (list "dan" "dog" "curry" "dog2") 
+                  ".jpg") '("dan.jpg" "dog.jpg" "curry.jpg" "dog2.jpg") "string-append-map test")
    
    ; list-nth-mod test
-   ;(check-equal? (list-nth-mod (list 0 1 2 3 4) 2) 2 "list-nth-mod test")
+   (check-equal? (list-nth-mod (list 0 1 2 3 4) 2) 2 "list-nth-mod test")
    
    ; stream-for-n-steps test
-   ;(check-equal? (stream-for-n-steps ones 2) (list 1 1) "stream-for-n-steps test")
+   (check-equal? (stream-for-n-steps ones 2) (list 1 1) "stream-for-n-steps test")
+   (check-equal? (stream-for-n-steps ones 0) null "stream-for-n-steps test")
+   (check-equal? (stream-for-n-steps powers-of-two 4) (list 2 4 8 16) "stream-for-n-steps test")
    
    ; funny-number-stream test
-   ;(check-equal? (stream-for-n-steps funny-number-stream 16) (list 1 2 3 4 -5 6 7 8 9 -10 11 12 13 14 -15 16) "funny-number-stream test")
+   (check-equal? (stream-for-n-steps funny-number-stream 16) (list 1 2 3 4 -5 6 7 8 9 -10 11 12 13 14 -15 16) "funny-number-stream test")
    
    ; dan-then-dog test
-   ;(check-equal? (stream-for-n-steps dan-then-dog 1) (list "dan.jpg") "dan-then-dog test")
+   (check-equal? (stream-for-n-steps dan-then-dog 1) (list "dan.jpg") "dan-then-dog test")
+   (check-equal? (stream-for-n-steps dan-then-dog 2) (list "dan.jpg" "dog.jpg") "dan-then-dog test")
    
    ; stream-add-zero test
-   ;(check-equal? (stream-for-n-steps (stream-add-zero ones) 1) (list (cons 0 1)) "stream-add-zero test")
+   (check-equal? (stream-for-n-steps (stream-add-zero ones) 1) (list (cons 0 1)) "stream-add-zero test")
+   (check-equal? (stream-for-n-steps (stream-add-zero ones) 2) (list (cons 0 1) (cons 0 1)) "7 2")
    
    ; cycle-lists test
-   ;(check-equal? (stream-for-n-steps (cycle-lists (list 1 2 3) (list "a" "b")) 3) (list (cons 1 "a") (cons 2 "b") (cons 3 "a")) 
-                 ;"cycle-lists test")
+   (check-equal? (stream-for-n-steps (cycle-lists (list 1 2 3) (list "a" "b")) 3) (list (cons 1 "a") (cons 2 "b") (cons 3 "a")) 
+                 "cycle-lists test")
+   (check-equal? (stream-for-n-steps (cycle-lists (list 1) (list "a")) 3) (list (cons 1 "a") (cons 1 "a") (cons 1 "a")) 
+                 "cycle-lists test")
    
    ; vector-assoc test
    ;(check-equal? (vector-assoc 4 (vector (cons 2 1) (cons 3 1) (cons 4 1) (cons 5 1))) (cons 4 1) "vector-assoc test")
