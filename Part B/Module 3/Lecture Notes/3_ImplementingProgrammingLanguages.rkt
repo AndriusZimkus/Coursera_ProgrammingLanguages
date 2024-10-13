@@ -71,3 +71,27 @@
 (eval-exp test1)
 ;(eval-exp test2)
 ;(eval-exp non-test)
+
+(eval-exp (multiply (const 5) (const 7)))
+
+;Racket functions as macros for interpreted language
+(define (andalso e1 e2)
+  (if-then-else e1 e2 (bool #f)))
+
+(define y (andalso (bool #t) (eq-num (const 3) (const 4))))
+
+(define (double e)
+  (multiply e (const 2)))
+
+; multiplication of list of expressions
+(define (list-product es) ; take in a Racket list
+  (if (null? es)
+      (const 1)
+      (multiply (car es) (list-product (cdr es)))))
+
+(define test (andalso (eq-num (double (const 4))
+                              (list-product (list (const 2)
+                                                  (const 2)
+                                                  (const 1)
+                                                  (const 2))))
+                      (bool #t)))
