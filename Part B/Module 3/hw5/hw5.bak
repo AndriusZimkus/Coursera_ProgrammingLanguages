@@ -22,18 +22,7 @@
 
 ;; Problem 1
 
-(define (racketlist->mupllist xs)
-  (if (null? xs)
-      (aunit)
-      (apair (car xs) (racketlist->mupllist (cdr xs))))
-  )
-
-(define ( mupllist->racketlist mupl-list)
-  (if (aunit? mupl-list)
-      null
-      (cons (apair-e1 mupl-list) (mupllist->racketlist (apair-e2 mupl-list)))
-      )
-  )
+;; CHANGE (put your solutions here)
 
 ;; Problem 2
 
