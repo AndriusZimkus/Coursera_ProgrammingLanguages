@@ -31,7 +31,7 @@
    (check-equal? (eval-under-env (mlet "x" (int 1) (add (add (int 5) (var "x")) (var "y"))) (list (cons "y" (int 5)))) (int 11) "mlet test other variable in env")
 
    ;; call test
-   ;(check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1))) (int 8) "call test")
+   (check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1))) (int 8) "call test")
    
    ;;snd test
    ;(check-equal? (eval-exp (snd (apair (int 1) (int 2)))) (int 2) "snd test")

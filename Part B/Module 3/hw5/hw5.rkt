@@ -30,8 +30,7 @@
 (define ( mupllist->racketlist mupl-list)
   (if (aunit? mupl-list)
       null
-      (cons (apair-e1 mupl-list) (mupllist->racketlist (apair-e2 mupl-list)))
-      ))
+      (cons (apair-e1 mupl-list) (mupllist->racketlist (apair-e2 mupl-list)))))
 
 ;; Problem 2
 
@@ -70,8 +69,15 @@
                    (eval-under-env (ifgreater-e4 e) env))
                (error "MUPL ifgreater applied to non-number")))]
                    
-        [(fun? e) e]
-        [(call? e) e]
+        [(fun? e) (closure env e)]
+        [(call? e)
+         (let ([v1 (eval-under-env (call-funexp e) env)]
+               [v2 (eval-under-env (call-actual e) env)])
+           (if (not (closure? v1))
+               (error "MUPL call applied to non closure")
+               (eval-under-env (fun-body (closure-fun v1)) (list (cons (fun-formal (closure-fun v1)) v2))))
+               )
+         ]
         [(mlet? e)
          (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (mlet-e e)) env))]
         [(apair? e) e]
@@ -79,12 +85,15 @@
         [(snd? e) e]
         [(aunit? e) e]
         [(isaunit? e) e]
+        [(closure? e) e]
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 
 ;; Do NOT change
 (define (eval-exp e)
   (eval-under-env e null))
+
+(eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1)))
 
 ;; Problem 3
 
