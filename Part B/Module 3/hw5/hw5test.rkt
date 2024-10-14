@@ -17,14 +17,19 @@
    (check-equal? (racketlist->mupllist (list (int 3) (int 4))) (apair (int 3) (apair (int 4) (aunit))) "racketlist->mupllist test")
    
    ;; check mupllist to racketlist with normal list
-   (check-equal? (mupllist->racketlist (apair (int 3) (apair (int 4) (aunit)))) (list (int 3) (int 4)) "racketlist->mupllist test")
+   (check-equal? (mupllist->racketlist (apair (int 3) (apair (int 4) (aunit)))) (list (int 3) (int 4)) "mupllist->racketlist test")
 
    ;; tests if ifgreater returns (int 2)
-   ;(check-equal? (eval-exp (ifgreater (int 3) (int 4) (int 3) (int 2))) (int 2) "ifgreater test")
+   (check-equal? (eval-exp (ifgreater (int 3) (int 4) (int 3) (int 2))) (int 2) "ifgreater test")
+   (check-equal? (eval-exp (ifgreater (int 5) (int 4) (int 3) (int 2))) (int 3) "ifgreater test2")
+   (check-equal? (eval-exp (ifgreater (int 10) (int 10) (int 3) (int 2))) (int 2) "ifgreater test2")
    
    ;; mlet test
-   ;(check-equal? (eval-exp (mlet "x" (int 1) (add (int 5) (var "x")))) (int 6) "mlet test")
-   
+   (check-equal? (eval-exp (mlet "x" (int 1) (add (int 5) (var "x")))) (int 6) "mlet test")
+   (check-equal? (eval-under-env (mlet "x" (int 1) (add (int 5) (var "x"))) null) (int 6) "mlet test")
+   (check-equal? (eval-under-env (mlet "x" (int 1) (add (int 5) (var "x"))) (cons "x" (int 5))) (int 6) "mlet test shadow")
+   (check-equal? (eval-under-env (mlet "x" (int 1) (add (add (int 5) (var "x")) (var "y"))) (list (cons "y" (int 5)))) (int 11) "mlet test other variable in env")
+
    ;; call test
    ;(check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1))) (int 8) "call test")
    

@@ -25,15 +25,13 @@
 (define (racketlist->mupllist xs)
   (if (null? xs)
       (aunit)
-      (apair (car xs) (racketlist->mupllist (cdr xs))))
-  )
+      (apair (car xs) (racketlist->mupllist (cdr xs)))))
 
 (define ( mupllist->racketlist mupl-list)
   (if (aunit? mupl-list)
       null
       (cons (apair-e1 mupl-list) (mupllist->racketlist (apair-e2 mupl-list)))
-      )
-  )
+      ))
 
 ;; Problem 2
 
@@ -51,7 +49,7 @@
 (define (eval-under-env e env)
   (cond [(var? e) 
          (envlookup env (var-string e))]
-        [(add? e) 
+        [(add? e)
          (let ([v1 (eval-under-env (add-e1 e) env)]
                [v2 (eval-under-env (add-e2 e) env)])
            (if (and (int? v1)
@@ -60,12 +58,34 @@
                        (int-num v2)))
                (error "MUPL addition applied to non-number")))]
         ;; CHANGE add more cases here
+        [(int? e) e]
+        [(ifgreater? e)
+         (let ([v1 (eval-under-env (ifgreater-e1 e) env)]
+               [v2 (eval-under-env (ifgreater-e2 e) env)])
+           (if (and (int? v1)
+                    (int? v2))
+               (if (> (int-num v1) 
+                      (int-num v2))
+                   (eval-under-env (ifgreater-e3 e) env)
+                   (eval-under-env (ifgreater-e4 e) env))
+               (error "MUPL ifgreater applied to non-number")))]
+                   
+        [(fun? e) e]
+        [(call? e) e]
+        [(mlet? e)
+         (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (mlet-e e)) env))]
+        [(apair? e) e]
+        [(fst? e) e]
+        [(snd? e) e]
+        [(aunit? e) e]
+        [(isaunit? e) e]
         [#t (error (format "bad MUPL expression: ~v" e))]))
+
 
 ;; Do NOT change
 (define (eval-exp e)
   (eval-under-env e null))
-        
+
 ;; Problem 3
 
 (define (ifaunit e1 e2 e3) "CHANGE")
