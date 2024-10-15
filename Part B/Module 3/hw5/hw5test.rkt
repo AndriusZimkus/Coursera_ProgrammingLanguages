@@ -9,6 +9,12 @@
 
 (require rackunit)
 
+(define y
+  (fun "y"
+       "x"
+       (let([current(add (var "x") (int 2))])
+         (ifgreater current (int 10) current (call (var "y") current)))))
+
 (define tests
   (test-suite
    "Sample tests for Assignment 5"
@@ -32,18 +38,28 @@
 
    ;; call test
    (check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int 1))) (int 8) "call test")
-   
+   (check-equal? (eval-exp (call (closure '() (fun #f "x" (add (var "x") (int 7)))) (int -1))) (int 6) "call test")
+   (check-equal? (eval-exp (call (closure '() y) (int 2))) (int 12) "recursion test")
+
+   ;; apair test
+   (check-equal? (eval-exp (apair (int 1) (int 2))) (apair (int 1) (int 2)) "apair test")
+   (check-equal? (eval-exp (apair (eval-exp (add (int 5) (int 1))) (eval-exp (add (int 4) (int 4))))) (apair (int 6) (int 8)) "apair test2")
+
+   ;;fst test
+   (check-equal? (eval-exp (fst (apair (int 1) (int 2)))) (int 1) "fst test")
+      
    ;;snd test
-   ;(check-equal? (eval-exp (snd (apair (int 1) (int 2)))) (int 2) "snd test")
+   (check-equal? (eval-exp (snd (apair (int 1) (int 2)))) (int 2) "snd test")
    
    ;; isaunit test
-   ;(check-equal? (eval-exp (isaunit (closure '() (fun #f "x" (aunit))))) (int 0) "isaunit test")
+   (check-equal? (eval-exp (isaunit (closure '() (fun #f "x" (aunit))))) (int 0) "isaunit test")
    
    ;; ifaunit test
-   ;(check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
+   (check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
+   (check-equal? (eval-exp (ifaunit (aunit) (int 2) (int 3))) (int 2) "ifaunit test2")
    
    ;; mlet* test
-   ;(check-equal? (eval-exp (mlet* (list (cons "x" (int 10))) (var "x"))) (int 10) "mlet* test")
+   (check-equal? (eval-exp (mlet* (list (cons "x" (int 10))) (var "x"))) (int 10) "mlet* test")
    
    ;; ifeq test
    ;(check-equal? (eval-exp (ifeq (int 1) (int 2) (int 3) (int 4))) (int 4) "ifeq test")
