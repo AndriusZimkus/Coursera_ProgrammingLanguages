@@ -123,37 +123,66 @@
 
 (define (mlet* lstlst e2)
   (letrec (
-        [helper (lambda (local-lst-lst env)               
-                  (if (null? local-lst-lst)
-                      (eval-under-env e2 env)
-                      (helper (cdr local-lst-lst)
-                              (cons (cons (car (car local-lst-lst)) (cdr (car local-lst-lst))) env))))])
+           [helper (lambda (local-lst-lst env)               
+                     (if (null? local-lst-lst)
+                         (eval-under-env e2 env)
+                         (helper (cdr local-lst-lst)
+                                 (cons
+                                  (cons (car (car local-lst-lst)) (eval-under-env (cdr (car local-lst-lst)) env))
+                                  env))))])
     (helper lstlst null)))
 
-  (define (ifeq e1 e2 e3 e4) "CHANGE")
+(define (ifeq e1 e2 e3 e4)
+  (mlet*
+   (list (cons "_x" e1)
+         (cons "_y" e2))
+   (ifgreater (var "_x") (var "_y") e4 (ifgreater (var "_y") (var "_x") e4 e3))))
 
-  ;; Problem 4
+;; Problem 4
 
-  (define mupl-map "CHANGE")
+(define mupl-map
+  (fun "mupl-map-helper"
+       "mupl-function"
+       (fun "mupl-map-applier" "mupl-list"
+            (let ([mupl-function (var "mupl-function")]
+                  [mupl-list-local (var "mupl-list")])
+              (if (aunit? mupl-list-local)
+                  mupl-list-local
+                  (apair (call mupl-function (fst mupl-list-local)) (call (var "mupl-map-applier") (snd mupl-list-local))))) 
+            ))
+       )
+ 
+;(let (
+;     [cfunc-body (fun-body mupl-function)]
+;    [cfunc-nameopt (fun-nameopt mupl-function)]
+;   [cfunc-formal (fun-formal mupl-function)]
+;  )
+;(fun cfunc-nameopt cfunc-formal
+;
+;        (if (aunit? mupl-list)
+;           mupl-list
+;          (apair (call mupl-function (fst mupl-list)) (mupl-map (snd mupl-list)))))))
 
-  (define mupl-mapAddN 
-    (mlet "map" mupl-map
-          "CHANGE (notice map is now in MUPL scope)"))
+(define x (call mupl-map (fun #f "x" (add (var "x") (int 7)))))
+(define y (call x (apair (int 1) (aunit))))
 
-  ;; Challenge Problem
+(define mupl-mapAddN 
+  (mlet "map" mupl-map
+        "CHANGE (notice map is now in MUPL scope)"))
 
-  (struct fun-challenge (nameopt formal body freevars) #:transparent) ;; a recursive(?) 1-argument function
+;; Challenge Problem
 
-  ;; We will test this function directly, so it must do
-  ;; as described in the assignment
-  (define (compute-free-vars e) "CHANGE")
+(struct fun-challenge (nameopt formal body freevars) #:transparent) ;; a recursive(?) 1-argument function
 
-  ;; Do NOT share code with eval-under-env because that will make
-  ;; auto-grading and peer assessment more difficult, so
-  ;; copy most of your interpreter here and make minor changes
-  (define (eval-under-env-c e env) "CHANGE")
+;; We will test this function directly, so it must do
+;; as described in the assignment
+(define (compute-free-vars e) "CHANGE")
 
-  ;; Do NOT change this
-  (define (eval-exp-c e)
-    (eval-under-env-c (compute-free-vars e) null))
-  
+;; Do NOT share code with eval-under-env because that will make
+;; auto-grading and peer assessment more difficult, so
+;; copy most of your interpreter here and make minor changes
+(define (eval-under-env-c e env) "CHANGE")
+
+;; Do NOT change this
+(define (eval-exp-c e)
+  (eval-under-env-c (compute-free-vars e) null))
