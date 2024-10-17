@@ -87,7 +87,7 @@
                                         ))])
                  (eval-under-env cfunc-body new-env))))]
         [(mlet? e)
-         (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (mlet-e e)) env))]
+         (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (eval-under-env (mlet-e e) env)) env))]
         [(apair? e)
          (let ([v1 (eval-under-env (apair-e1 e) env)]
                [v2 (eval-under-env (apair-e2 e) env)])
@@ -119,7 +119,11 @@
 ;; Problem 3
 
 (define (ifaunit e1 e2 e3)
-  (if (aunit? e1) e2 e3))
+  (mlet "x" e1 (aunit? (var "x"))))
+        
+
+;(eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10)))
+(aunit? (eval-exp (fst (apair (aunit) (int 0)))))
 
 (define (mlet* lstlst e2)
   (letrec (
