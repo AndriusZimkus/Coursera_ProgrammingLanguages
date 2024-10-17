@@ -119,11 +119,10 @@
 ;; Problem 3
 
 (define (ifaunit e1 e2 e3)
-  (mlet "x" e1 (aunit? (var "x"))))
-        
+  (call (fun #f "x" (if (aunit? (var "x")) e2 e3)) e1))
 
-;(eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10)))
-(aunit? (eval-exp (fst (apair (aunit) (int 0)))))
+(eval-exp (ifaunit (int 1) (int 2) (int 3)))
+(eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10)))
 
 (define (mlet* lstlst e2)
   (letrec (
