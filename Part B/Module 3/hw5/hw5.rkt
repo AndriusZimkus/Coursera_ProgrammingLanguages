@@ -37,9 +37,11 @@
 ;; lookup a variable in an environment
 ;; Do NOT change this function
 (define (envlookup env str)
+  (begin ;(println env)
+         ;(println str)
   (cond [(null? env) (error "unbound variable during evaluation" str)]
         [(equal? (car (car env)) str) (cdr (car env))]
-        [#t (envlookup (cdr env) str)]))
+        [#t (envlookup (cdr env) str)])))
 
 ;; Do NOT change the two cases given to you.  
 ;; DO add more cases for other kinds of MUPL expressions.
@@ -73,19 +75,28 @@
         [(call? e)
          (let ([v1 (eval-under-env (call-funexp e) env)]
                [v2 (eval-under-env (call-actual e) env)])
-           (if (not (closure? v1))
-               (error "MUPL call applied to non closure")
-               (let*(
-                     [cfunc (closure-fun v1)]
-                     [cfunc-body (fun-body cfunc)]
-                     [cfunc-nameopt (fun-nameopt cfunc)]
-                     [cfunc-formal (fun-formal cfunc)]
-                     [new-env (list (cons cfunc-formal v2)      ; map 2nd argument name to v2
-                                    (if cfunc-nameopt           ; map 1st arg function name to closure v1
-                                        (cons cfunc-nameopt v1)
-                                        null
-                                        ))])
-                 (eval-under-env cfunc-body new-env))))]
+           ;(if (not (closure? v1))
+           ;(error "MUPL call applied to non closure")
+           (let*(
+                 [cfunc (closure-fun v1)]
+                 [cenv (closure-env v1)]
+                 [cfunc-body (fun-body cfunc)]
+                 [cfunc-nameopt (fun-nameopt cfunc)]
+                 [cfunc-formal (fun-formal cfunc)]
+                 [new-env (list (cons cfunc-formal v2)
+                                
+                                (if cfunc-nameopt           
+                                    (cons cfunc-nameopt v1)
+                                    (cons null null)))]
+                          )      ; map 2nd argument name to v2
+                                ;(if cfunc-nameopt           ; map 1st arg function name to closure v1
+                                ;    (cons cfunc-nameopt v1)
+                                ;    (cons null null)
+                                ;    )
+                                ;cenv)])
+             (begin ;(println new-env)
+                    ;(println " new line ")
+                    (eval-under-env cfunc-body new-env))))]
         [(mlet? e)
          (eval-under-env (mlet-body e) (cons (cons (mlet-var e) (eval-under-env (mlet-e e) env)) env))]
         [(apair? e)
@@ -119,21 +130,16 @@
 ;; Problem 3
 
 (define (ifaunit e1 e2 e3)
-  (call (fun #f "x" (if (aunit? (var "x")) e2 e3)) e1))
-
-(eval-exp (ifaunit (int 1) (int 2) (int 3)))
-(eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10)))
+  (ifgreater (isaunit e1) (int 0) e2 e3))
 
 (define (mlet* lstlst e2)
-  (letrec (
-           [helper (lambda (local-lst-lst env)               
-                     (if (null? local-lst-lst)
-                         (eval-under-env e2 env)
-                         (helper (cdr local-lst-lst)
-                                 (cons
-                                  (cons (car (car local-lst-lst)) (eval-under-env (cdr (car local-lst-lst)) env))
-                                  env))))])
-    (helper lstlst null)))
+  (if (null? lstlst)
+      e2
+      (mlet
+       (car (car lstlst))
+       (cdr (car lstlst))
+       (mlet* (cdr lstlst) e2))
+      ))
 
 (define (ifeq e1 e2 e3 e4)
   (mlet*
@@ -144,30 +150,26 @@
 ;; Problem 4
 
 (define mupl-map
-  (fun "mupl-map-helper"
+  (fun #f
        "mupl-function"
-       (fun "mupl-map-applier" "mupl-list"
+       (fun #f "mupl-list"
             (let ([mupl-function (var "mupl-function")]
                   [mupl-list-local (var "mupl-list")])
               (if (aunit? mupl-list-local)
                   mupl-list-local
                   (apair (call mupl-function (fst mupl-list-local)) (call (var "mupl-map-applier") (snd mupl-list-local))))) 
             ))
-       )
- 
-;(let (
-;     [cfunc-body (fun-body mupl-function)]
-;    [cfunc-nameopt (fun-nameopt mupl-function)]
-;   [cfunc-formal (fun-formal mupl-function)]
-;  )
-;(fun cfunc-nameopt cfunc-formal
-;
-;        (if (aunit? mupl-list)
-;           mupl-list
-;          (apair (call mupl-function (fst mupl-list)) (mupl-map (snd mupl-list)))))))
+  )
 
-(define x (call mupl-map (fun #f "x" (add (var "x") (int 7)))))
-(define y (call x (apair (int 1) (aunit))))
+;(println "define x")
+;(define x (call mupl-map (fun #f "x" (add (var "x") (int 7)))))
+;(println "eval-exp x")
+;(define eval-x (eval-exp x))
+;(println "define y")
+;(define y (call eval-x (apair (int 1) (aunit))))
+
+;(println "eval-exp y")
+;(eval-exp y)
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map

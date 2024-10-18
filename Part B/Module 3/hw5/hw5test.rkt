@@ -58,7 +58,7 @@
    ;; ifaunit test
    (check-equal? (eval-exp (ifaunit (int 1) (int 2) (int 3))) (int 3) "ifaunit test")
    (check-equal? (eval-exp (ifaunit (aunit) (int 2) (int 3))) (int 2) "ifaunit test2")
-   (check-equal? (eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10))) (int 4) "ifaunit test2")
+   (check-equal? (eval-exp (ifaunit (fst (apair (aunit) (int 0))) (int 4) (int 10))) (int 4) "ifaunit test3")
    
     ;; mlet* test
     (check-equal? (eval-exp (mlet* (list (cons "x" (int 10))) (var "x"))) (int 10) "mlet* test")
@@ -70,8 +70,8 @@
     (check-equal? (eval-exp (ifeq (int 1) (int 1) (int 3) (int 4))) (int 3) "ifeq test2")
    
     ;; mupl-map test
-    ;(check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
-    ;              (apair (int 8) (aunit)) "mupl-map test")
+    (check-equal? (eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
+                  (apair (int 8) (aunit)) "mupl-map test")
    
     ;; problems 1, 2, and 4 combined test
     ;(check-equal? (mupllist->racketlist
