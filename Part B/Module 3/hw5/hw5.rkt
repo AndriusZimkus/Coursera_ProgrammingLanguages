@@ -81,7 +81,7 @@
                      [cfunc-body (fun-body cfunc)]
                      [cfunc-nameopt (fun-nameopt cfunc)]
                      [cfunc-formal (fun-formal cfunc)]
-                     [new-env (cons (cons cfunc-formal v2) ; map 2nd argument name to v2
+                     [new-env (cons (cons cfunc-formal v2)                ; map 2nd argument name to v2
                                     cenv)]
                      [new-env ( if cfunc-nameopt           
                                    (cons (cons cfunc-nameopt v1) new-env) ; map 1st arg function name to closure v1
@@ -149,8 +149,7 @@
               (ifaunit mupl-list-local
                   (aunit)
                   (apair (call mupl-function (fst mupl-list-local))
-                         (call (call (var "mupl-map") (var "mupl-function")) (snd mupl-list-local))))) 
-            )))
+                         (call (call (var "mupl-map") (var "mupl-function")) (snd mupl-list-local))))))))
 
 
 (define mupl-mapAddN 
