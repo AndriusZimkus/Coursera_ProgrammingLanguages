@@ -1,0 +1,32 @@
+Programming Languages, Dan Grossman
+Section 7: Quiz
+
+1. Check the box if the statement is true
+Racket is dynamically typed
+
+2. Check the box if the statement is true
+A "type system" that rejects every program is sound but useless.
+A "type system" that accepts every program is complete but useless.
+
+3. For each of the following, check the box if and only if it is an accurate description of an advantage of (sound) static typing (for preventing the sort of things that ML's type system prevents).
+
+If you change the argument type of a function, the type-checker can give you a list of callers that no longer type-check as a result. 
+If you "comment out" a function and the program still type-checks, then you can be sure that no execution of the program will "try" to call the function.
+
+4. Wider tuples allowed in ML
+ML without the change described above has a sound type system.
+ML with the change described above has a sound type system.
+
+5. Check the box below only if the ML code does not type-check in regular ML and does type-check if we make the change to the type system described in Question 4.  All the code below uses this function:
+val z1 = f1 (3,4,5)
+
+val p2 = (7,9,11)
+val z4 = f1 p2
+
+val z5 = if true then f1 (3,4) else f1 (5,6,7) 
+
+6. Which of the reasons below is not an advantage of making the type-system change described in Question 4
+It makes it easier to convert between a multi-argument function using currying and one using tupling.
+
+7. Which of the reasons below is not  a disadvantage of making the type-system change described in Question 4. - wrong
+It adds a special case to the language even though there are other places where a too-wide tuple could be allowed, for example in pattern-matching like let val (x,y) = (3,4,5) in ... endlet val (x,y) = (3,4,5) in ... end
