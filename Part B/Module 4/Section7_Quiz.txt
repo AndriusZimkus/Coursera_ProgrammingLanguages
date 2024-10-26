@@ -29,4 +29,5 @@ val z5 = if true then f1 (3,4) else f1 (5,6,7)
 It makes it easier to convert between a multi-argument function using currying and one using tupling.
 
 7. Which of the reasons below is not  a disadvantage of making the type-system change described in Question 4. - wrong
-It adds a special case to the language even though there are other places where a too-wide tuple could be allowed, for example in pattern-matching like let val (x,y) = (3,4,5) in ... endlet val (x,y) = (3,4,5) in ... end
+It adds a special case to the language even though there are other places where a too-wide tuple could be allowed, for example in pattern-matching like let val (x,y) = (3,4,5) in ... endlet val (x,y) = (3,4,5) in ... end - wrong
+It makes type inference more difficult - wrong
