@@ -1,5 +1,6 @@
 class A
 
+  # Class constant
   Global = 9
   
   #constructor
@@ -12,6 +13,7 @@ class A
 
   def m2 x
     @foo += x
+    #Class variable
     @@bar += 1
   end
 

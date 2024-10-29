@@ -1,0 +1,12 @@
+class V
+
+  def foo
+    @foo
+  end
+
+  def foo= x
+    @foo = x
+  end
+
+  
+end
