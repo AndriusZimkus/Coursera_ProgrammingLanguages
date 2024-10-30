@@ -1,0 +1,2 @@
+M-x inf-ruby
+https://github.com/nonsequitur/inf-ruby?tab=readme-ov-file
