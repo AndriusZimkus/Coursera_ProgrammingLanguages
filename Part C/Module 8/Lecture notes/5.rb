@@ -5,7 +5,7 @@ puts x
 #puts 3.methods - nil.methods
 
 #Load My_rational
-load "4.rb"
+load "MyRational.rb"
 
 x = MyRational.new(9,6)
 puts x.to_s
