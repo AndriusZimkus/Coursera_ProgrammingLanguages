@@ -32,4 +32,4 @@ It makes it easier to convert between a multi-argument function using currying a
 It adds a special case to the language even though there are other places where a too-wide tuple could be allowed, for example in pattern-matching like let val (x,y) = (3,4,5) in ... endlet val (x,y) = (3,4,5) in ... end - wrong
 It makes type inference more difficult - wrong
 
-It is impossible for ML to ignore an argument - correct
+It is a bad idea for functions to ignore some of their arguments, and it is impossible for a function in regular ML to ignore an argument - correct
