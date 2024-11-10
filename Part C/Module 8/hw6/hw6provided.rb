@@ -305,7 +305,7 @@ class Tetris
     @root.bind('w', proc {@board.rotate_counter_clockwise})
     @root.bind('Up', proc {@board.rotate_counter_clockwise}) 
     
-    @root.bind('space' , proc {@board.drop_all_the_way}) 
+    @root.bind('space' , proc {@board.drop_all_the_way})
   end
 
   def buttons
