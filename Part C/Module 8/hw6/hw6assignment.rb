@@ -7,6 +7,7 @@ class MyPiece < Piece
   # The constant All_My_Pieces should be declared here
   # your enhancements here
 
+  #[x,y]
   # class array holding all the pieces and their rotations
   #All_My_Pieces = [[[[0, 0], [1, 0], [0, 1], [1, 1]]],  # square (only needs one)
   #             rotations([[0, 0], [-1, 0], [1, 0], [0, -1]]), # T
@@ -20,11 +21,30 @@ class MyPiece < Piece
   #             [[[0, 0], [-1, 0], [1, 0], [2, 0], [3,0]], # 5-long (two)
    #            [[0, 0], [0, -1], [0, 1], [0, 2],[0,3]]]
 
-   #               ]
+  #]
+  
+    All_My_Pieces = 
+      [
+          rotations([[0,0],[0,1],[1,0]])
+      ]
 
-    All_My_Pieces = [
-               [[[0, 0], [-1, 0], [1, 0], [2, 0], [-2,0]], # 5-long (two)
-                [[0, 0], [0, -1], [0, 1], [0, 2],[0,-2]]]]
+  
+    #All_My_Pieces = 
+    #  [
+    #    [
+    #      [[0,0],[0,1],[1,1]],
+    #      [[0,1],[0,2],[1,1]],
+    #      [[0,1],[0,2],[-1,1]],
+    #      [[0,0],[0,1],[-1,1]]
+    #    ]
+    #  ]
+  
+   # All_My_Pieces = [
+    #           [
+    #   [[0, 0], [-1, 0], [1, 0], [2, 0], [-2,0]], # 5-long (two)
+    #   [[0, 0], [0, -1], [0, 1], [0, 2],[0,-2]]
+    #]
+    # ]
     
 
   # class method to choose the next piece
@@ -49,6 +69,22 @@ class MyBoard < Board
     @current_block = MyPiece.next_piece(self)
     @current_pos = nil
   end
+
+    # gets the information from the current piece about where it is and uses this
+  # to store the piece on the board itself.  Then calls remove_filled.
+  def store_current
+    locations = @current_block.current_rotation
+    locationsLength = locations.length()
+    displacement = @current_block.position
+    (0..locationsLength-1).each{|index| 
+      current = locations[index];
+      @grid[current[1]+displacement[1]][current[0]+displacement[0]] = 
+      @current_pos[index]
+    }
+    remove_filled
+    @delay = [@delay - 2, 80].max
+  end
+
 
 end
 
