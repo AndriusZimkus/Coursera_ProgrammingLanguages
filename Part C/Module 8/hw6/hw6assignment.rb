@@ -7,7 +7,7 @@ class MyPiece < Piece
   # The constant All_My_Pieces should be declared here
   # your enhancements here
 
-  #[x,y]
+  # [x,y]
   # class array holding all the pieces and their rotations
   All_My_Pieces = [[[[0, 0], [1, 0], [0, 1], [1, 1]]],  # square (only needs one)
                rotations([[0, 0], [-1, 0], [1, 0], [0, -1]]), # T
@@ -22,12 +22,22 @@ class MyPiece < Piece
                  [[0, 0], [-1, 0], [1, 0], [2, 0], [-2,0]], # 5-long (two)
                  [[0, 0], [0, -1], [0, 1], [0, 2],[0,-2]]
                ],
-               rotations([[0,0],[0,1],[1,0],[1,1],[2,1]]) # 5 piece
-  ]    
+               rotations([[-1,0],[0,0],[-1,1],[0,1],[1,1]]) # 5 piece
+                  ]
+  
+  Cheat_Piece = [[0,0]]
 
   # class method to choose the next piece
   def self.next_piece (board)
-    MyPiece.new(All_My_Pieces.sample, board)
+    if board.next_block.nil?
+      MyPiece.new(All_My_Pieces.sample, board)
+    else
+      board.next_block
+    end
+    
+  end
+  def self.cheat_piece (board)
+    MyPiece.new(Cheat_Piece, board)
   end
   
 end
@@ -38,17 +48,21 @@ class MyBoard < Board
     def initialize (game)
     @grid = Array.new(num_rows) {Array.new(num_columns)}
     @current_block = MyPiece.next_piece(self)
+    @next_block = nil
     @score = 0
     @game = game
     @delay = 500
+    @cheat_flag = false
     end
 
   def next_piece
     @current_block = MyPiece.next_piece(self)
     @current_pos = nil
+    @cheat_flag = false
+    @next_block = nil
   end
 
-    # gets the information from the current piece about where it is and uses this
+  # gets the information from the current piece about where it is and uses this
   # to store the piece on the board itself.  Then calls remove_filled.
   def store_current
     locations = @current_block.current_rotation
@@ -63,6 +77,19 @@ class MyBoard < Board
     @delay = [@delay - 2, 80].max
   end
 
+  def cheat
+    if !@cheat_flag and @score >= 100
+      @cheat_flag = true
+      @score -= 100
+      @next_block = MyPiece.cheat_piece(self)
+    end
+    
+  end
+
+  # the current next block
+  def next_block
+    @next_block
+  end
 
 end
 
@@ -90,9 +117,8 @@ class MyTetris < Tetris
     @root.bind('Up', proc {@board.rotate_counter_clockwise}) 
     @root.bind('space' , proc {@board.drop_all_the_way})
     @root.bind('u', proc {@board.rotate_clockwise; @board.rotate_clockwise })
+    @root.bind('c', proc {@board.cheat})
   end
-
-  
 
 end
 
