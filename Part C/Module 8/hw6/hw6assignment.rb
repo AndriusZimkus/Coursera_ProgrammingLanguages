@@ -9,14 +9,7 @@ class MyPiece < Piece
 
   # [x,y]
   # class array holding all the pieces and their rotations
-  All_My_Pieces = [[[[0, 0], [1, 0], [0, 1], [1, 1]]],  # square (only needs one)
-               rotations([[0, 0], [-1, 0], [1, 0], [0, -1]]), # T
-               [[[0, 0], [-1, 0], [1, 0], [2, 0]], # long (only needs two)
-               [[0, 0], [0, -1], [0, 1], [0, 2]]],
-               rotations([[0, 0], [0, -1], [0, 1], [1, 1]]), # L
-               rotations([[0, 0], [0, -1], [0, 1], [-1, 1]]), # inverted L
-               rotations([[0, 0], [-1, 0], [0, -1], [1, -1]]), # S
-               rotations([[0, 0], [1, 0], [0, -1], [-1, -1]]), # Z
+  All_My_Pieces = All_Pieces + [
                rotations([[0,0],[0,1],[1,0]]),              # 3-piece
                [
                  [[0, 0], [-1, 0], [1, 0], [2, 0], [-2,0]], # 5-long (two)
@@ -25,7 +18,7 @@ class MyPiece < Piece
                rotations([[-1,0],[0,0],[-1,1],[0,1],[1,1]]) # 5 piece
                   ]
   
-  Cheat_Piece = [[0,0]]
+  Cheat_Piece = [[[0,0]]]
 
   # class method to choose the next piece
   def self.next_piece (board)
@@ -91,6 +84,13 @@ class MyBoard < Board
     @next_block
   end
 
+    # rotates 180
+  def rotate_180
+    if !game_over? and @game.is_running?
+      @current_block.move(0, 0, 2)
+    end
+    draw
+  end
 end
 
 class MyTetris < Tetris
@@ -103,20 +103,9 @@ class MyTetris < Tetris
     @board.draw
   end
   
-  def key_bindings  
-    @root.bind('n', proc {self.new_game}) 
-    @root.bind('p', proc {self.pause}) 
-    @root.bind('q', proc {exitProgram})
-    @root.bind('a', proc {@board.move_left})
-    @root.bind('Left', proc {@board.move_left}) 
-    @root.bind('d', proc {@board.move_right})
-    @root.bind('Right', proc {@board.move_right}) 
-    @root.bind('s', proc {@board.rotate_clockwise})
-    @root.bind('Down', proc {@board.rotate_clockwise})
-    @root.bind('w', proc {@board.rotate_counter_clockwise})
-    @root.bind('Up', proc {@board.rotate_counter_clockwise}) 
-    @root.bind('space' , proc {@board.drop_all_the_way})
-    @root.bind('u', proc {@board.rotate_clockwise; @board.rotate_clockwise })
+  def key_bindings
+    super
+    @root.bind('u', proc {@board.rotate_180 })
     @root.bind('c', proc {@board.cheat})
   end
 
