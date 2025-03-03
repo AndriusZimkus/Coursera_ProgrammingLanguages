@@ -9,6 +9,7 @@ SML - C-c C-s
 
 Copy - M-w
 Paste - C-y
+Cut - C-w
 
 Undo - C-x u
 Redo - C-M-_
