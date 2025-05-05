@@ -59,3 +59,13 @@ in
 	then (print "eval_prog with shadowing 'a' in environment is working properly\n")
 	else (print "eval_prog with shadowing 'a' in environment is not working properly\n")
 end;
+
+(* My tests *)
+let
+    val Point(a,b) = Point(0.0,0.0);
+    val Point(c,d) = Point(0.0000001,0.0);
+in
+    if real_close_point (a,b) (c,d)
+    then (print "x y are correctly close\n")
+    else (print "Incorrect - x and y should be close\n")
+end;
