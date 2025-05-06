@@ -61,11 +61,42 @@ in
 end;
 
 (* My tests *)
+print "Test 1 - points close\n";
 let
     val Point(a,b) = Point(0.0,0.0);
     val Point(c,d) = Point(0.0000001,0.0);
 in
     if real_close_point (a,b) (c,d)
-    then (print "x y are correctly close\n")
-    else (print "Incorrect - x and y should be close\n")
+    then (print "Correct - Points are correctly close\n")
+    else (print "Incorrect - points should be close\n")
+end;
+
+print "Test 2 - point close to itself\n";
+let
+    val x = Point(0.0, 0.0);
+    val Point(x1, y1) = x;
+in
+    if real_close_point (x1,y1) (x1,y1)
+    then (print "Correct - x is correctly close\n")
+    else (print "Incorrect - x should be close to itself\n")
+end;
+
+print "Test 3 - point close to itself\n";
+let
+    val x = Point(0.0, 0.0);
+in
+    if case x of Point(p) => real_close_point p p 
+	      | _  => false
+    then (print "Correct - x is correctly close\n")
+    else (print "Incorrect - x should be close to itself\n")
+end;
+
+print "Test 4 - point not close to other point\n";
+let
+    val Point(a,b) = Point(0.0, 0.0);
+    val Point(c,d) = Point(1.0,2.0);
+in
+    if not (real_close_point (a,b) (c,d))
+    then (print "Correct - Points are not close\n")
+    else (print "Incorrect - Points should not be close\n")
 end;
