@@ -100,3 +100,16 @@ in
     then (print "Correct - Points are not close\n")
     else (print "Incorrect - Points should not be close\n")
 end;
+
+print "Test 5 - preprocess and evaluate Shift\n";
+let
+    val LS = LineSegment(1.0,2.0,1.0,2.0);
+    val s = Shift(10.0,20.0, LS);
+    val actual = eval_prog(preprocess_prog(s),[]);
+    val expected = Point(11.0,22.0);
+in
+    if case(actual,expected) of (Point(p1), Point(p2)) => real_close_point p1 p2
+			      | _  => false
+    then (print "Correct - actual is a point close to expected\n")
+    else (print "Incorrect - actual is either not a point or not close to expected\n")    
+end;

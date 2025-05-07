@@ -203,7 +203,7 @@ fun eval_prog (e,env) =
 	in
 	    case evaluatedExp of
 		NoPoints => NoPoints 
-	      | Point(x1,y1) => Point(x1+deltaX, y1+deltaY)
+	      | Point(x,y) => Point(x+deltaX, y+deltaY)
 	      | Line(m,b) => Line(m,(b+deltaY-m*deltaX))
 	      | VerticalLine(x) => VerticalLine(x+deltaX)
 	      | LineSegment(x1,y1,x2,y2) => LineSegment(x1+deltaX,y1+deltaY,x2+deltaX,y2+deltaY) 
@@ -215,10 +215,13 @@ fun eval_prog (e,env) =
 fun preprocess_prog(e) =
     case e of
 	LineSegment (x1,y1,x2,y2) =>
-	if real_close_point (x1,y1) (x2,y2) 
-	then Point(x1,y1) (* This is not a line segment - both points same*)
+	if real_close_point (x1,y1) (x2,y2)
+	  then Point(x1,y1) (* This is not a line segment - both points same*)
 	else if x2 < x1 (* First point must be to the left*)
 		orelse real_close(x1,x2) andalso y2<y1 (* Same x, first y must be lower*)
-	then LineSegment(x2,y2,x1,y1)  
-	else e					
-      | _ => e 
+	  then LineSegment(x2,y2,x1,y1)
+	else e
+      | Intersect(e1,e2) => Intersect(preprocess_prog(e1), preprocess_prog(e2))
+      | Let(s,e1,e2) => Let(s,preprocess_prog(e1), preprocess_prog(e2))
+      | Shift(a,b,e)  => Shift(a,b,preprocess_prog(e))
+      | _ => e
