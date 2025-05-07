@@ -11,7 +11,7 @@
 #   * intersect, which uses the double-dispatch pattern
 #   * intersectPoint, intersectLine, and intersectVerticalLine for 
 #       for being called by intersect of appropriate clases and doing
-#       the correct intersection calculuation
+#       the correct intersection calculation
 #   * (We would need intersectNoPoints and intersectLineSegment, but these
 #      are provided by GeometryValue and should not be overridden.)
 #   *  intersectWithSegmentAsLineResult, which is used by 
@@ -152,6 +152,10 @@ class LineSegment < GeometryValue
     @x2 = x2
     @y2 = y2
   end
+
+  def preprocess_prog #TODO
+    self
+  end
 end
 
 # Note: there is no need for getter methods for the non-value classes
@@ -168,17 +172,23 @@ end
 class Let < GeometryExpression
   # *add* methods to this class -- do *not* change given code and do not
   # override any methods
+
   # Note: Look at Var to guide how you implement Let
   def initialize(s,e1,e2)
     @s = s
     @e1 = e1
     @e2 = e2
   end
+
+  def preprocess_prog
+    Let.new(@s,@e1.preprocess_prog,@e2.preprocess_prog)
+  end
 end
 
 class Var < GeometryExpression
   # *add* methods to this class -- do *not* change given code and do not
   # override any methods
+
   def initialize s
     @s = s
   end
@@ -186,6 +196,10 @@ class Var < GeometryExpression
     pr = env.assoc @s
     raise "undefined variable" if pr.nil?
     pr[1]
+  end
+
+  def preprocess_prog #TODO
+    self
   end
 end
 
