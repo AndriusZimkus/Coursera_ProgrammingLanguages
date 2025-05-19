@@ -65,24 +65,12 @@ class GeometryValue
     np # could also have NoPoints.new here instead
   end
 
-  def intersectPoint point
-    self.intersectPoint point
-  end
-
-  def intersectLine line
-    self.intersectLine line
-  end
-
-  def intersectVerticalLine vLine
-    self.intersectVerticalLine vLine
-  end
-
   # we put this in this class so all subclasses can inherit it:
   # the intersection of self with a LineSegment is computed by
   # first intersecting with the line containing the segment and then
   # calling the result's intersectWithSegmentAsLineResult with the segment
   def intersectLineSegment seg
-    line_result = self.intersect(two_points_to_line(seg.x1,seg.y1,seg.x2,seg.y2))
+    line_result = intersect(two_points_to_line(seg.x1,seg.y1,seg.x2,seg.y2))
     line_result.intersectWithSegmentAsLineResult seg
   end
 end
