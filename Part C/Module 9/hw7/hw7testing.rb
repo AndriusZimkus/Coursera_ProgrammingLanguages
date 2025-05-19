@@ -19,3 +19,7 @@ puts f
 g = Shift.new(5,8,a)
 h = g.eval_prog []
 puts "h #{h.x} #{h.y}"
+
+i = [["A",2,3]]
+j = i + [[4,5]]
+puts j.first
