@@ -113,3 +113,14 @@ in
     then (print "Correct - actual is a point close to expected\n")
     else (print "Incorrect - actual is either not a point or not close to expected\n")    
 end;
+
+print "Test 6 LineSegment(1.00000999,1.0,1.0,2.0)\n";
+let
+    val dec = 1.00000999;
+    val x = LineSegment(dec,1.0,1.0,2.0);
+    val actual = preprocess_prog(x);
+in
+    case actual of LineSegment(a,b,c,d)
+		   => if real_equal(a,dec) then print "Correct - not changed\n" else print "Incorrect - changed\n"
+		 | _ => print "Incorrect - not a Line Segment\n"  
+end;
