@@ -323,25 +323,12 @@ class LineSegment < GeometryValue
 
   def intersectWithSegmentAsLineResult seg
     if real_close(@x1,@x2) # segments on a vertical line
-      if @y1 < seg.y1
-        aXstart = @x1
-        aYstart = @y1
-        aXend = @x2
-        aYend = @y2
-        bXstart = seg.x1
-        bYstart = seg.y1
-        bXend = seg.x2
-        bYend = seg.y2
-      else
-        bXstart = @x1
-        bYstart = @y1
-        bXend = @x2
-        bYend = @y2
-        aXstart = seg.x1
-        aYstart = seg.y1
-        aXend = seg.x2
-        aYend = seg.y2
-      end
+      aXstart,aYstart,aXend,aYend,bXstart,bYstart,bXend,bYend =
+         if @y1 < seg.y1
+          [@x1,@y1,@x2,@y2,seg.x1,seg.y1,seg.x2,seg.y2]
+         else
+           [seg.x1,seg.y1,seg.x2,seg.y2,@x1,@y1,@x2,@y2]
+         end
       if real_close(aYend,bYstart)
         Point.new(aXend,aYend) # just touching
       elsif aYend < bYstart
@@ -352,24 +339,11 @@ class LineSegment < GeometryValue
         LineSegment.new(bXstart,bYstart,aXend,aYend) # overlapping
       end
     else # segments are on a non-vertical line
+      aXstart,aYstart,aXend,aYend,bXstart,bYstart,bXend,bYend = 
       if @x1 < seg.x1
-        aXstart = @x1
-        aYstart = @y1
-        aXend = @x2
-        aYend = @y2
-        bXstart = seg.x1
-        bYstart = seg.y1
-        bXend = seg.x2
-        bYend = seg.y2
+        [@x1,@y1,@x2,@y2,seg.x1,seg.y1,seg.x2,seg.y2]
       else
-        bXstart = @x1
-        bYstart = @y1
-        bXend = @x2
-        bYend = @y2
-        aXstart = seg.x1
-        aYstart = seg.y1
-        aXend = seg.x2
-        aYend = seg.y2
+        [seg.x1,seg.y1,seg.x2,seg.y2,@x1,@y1,@x2,@y2]
       end
       if real_close(aXend,bXstart)
         Point.new(aXend,aYend) # just touching
