@@ -102,7 +102,7 @@ class NoPoints < GeometryValue
   def intersectLine line
     self # intersection with line and no-points is no-points
   end
-  def intersectVerticalLine vline
+  def intersectVerticalLine vLine
     self # intersection with line and no-points is no-points
   end
   # if self is the intersection of (1) some shape s and (2) 
@@ -318,7 +318,7 @@ class LineSegment < GeometryValue
   end
 
   def intersectVerticalLine vLine
-    vline.intersectLineSegment self
+    vLine.intersectLineSegment self
   end
 
   def intersectWithSegmentAsLineResult seg
