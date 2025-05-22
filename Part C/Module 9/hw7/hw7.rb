@@ -53,9 +53,10 @@ class GeometryValue
     end
   end
 
-  def inBetween(v,end1,end2) # Helper method
-    (end1 - GeometryExpression::Epsilon <= v and v <= end2 + GeometryExpression::Epsilon) \
-    or (end2 - GeometryExpression::Epsilon <= v and v <= end1 + GeometryExpression::Epsilon)
+  # Helper method
+  def inBetween(v,end1,end2)
+    ((end1 - GeometryExpression::Epsilon) <= v and v <= (end2 + GeometryExpression::Epsilon)) \
+    or ((end2 - GeometryExpression::Epsilon) <= v and v <= (end1 + GeometryExpression::Epsilon))
   end
 
   public
@@ -73,6 +74,7 @@ class GeometryValue
     line_result = intersect(two_points_to_line(seg.x1,seg.y1,seg.x2,seg.y2))
     line_result.intersectWithSegmentAsLineResult seg
   end
+
 end
 
 class NoPoints < GeometryValue
@@ -200,7 +202,7 @@ class Line < GeometryValue
   end
 
   def intersectPoint p
-    p.intersectLine(self)
+    p.intersectLine self
   end
 
   def intersectLine line
@@ -211,14 +213,14 @@ class Line < GeometryValue
         NoPoints.new() # parallel lines
       end
     else
-      x = (line.b - @b) / (@m - line.b)
+      x = (line.b - @b) / (@m - line.m)
       y = @m * x + @b
       Point.new(x,y)
     end
   end
 
   def intersectVerticalLine vLine
-    Point.new(vLine.x,@m*vLine.x*@b)
+    Point.new(vLine.x,@m*vLine.x+@b)
   end
 
   def intersectWithSegmentAsLineResult seg
@@ -307,9 +309,21 @@ class LineSegment < GeometryValue
     other.intersectLineSegment self
   end
 
+  def intersectPoint p
+    p.intersectLineSegment self
+  end
+
+  def intersectLine line
+    line.intersectLineSegment self
+  end
+
+  def intersectVerticalLine vLine
+    vline.intersectLineSegment self
+  end
+
   def intersectWithSegmentAsLineResult seg
     if real_close(@x1,@x2) # segments on a vertical line
-      if @y1 < seg.y2
+      if @y1 < seg.y1
         aXstart = @x1
         aYstart = @y1
         aXend = @x2
@@ -338,7 +352,7 @@ class LineSegment < GeometryValue
         LineSegment.new(bXstart,bYstart,aXend,aYend) # overlapping
       end
     else # segments are on a non-vertical line
-      if @x1 < seg.x2
+      if @x1 < seg.x1
         aXstart = @x1
         aYstart = @y1
         aXend = @x2
@@ -348,14 +362,14 @@ class LineSegment < GeometryValue
         bXend = seg.x2
         bYend = seg.y2
       else
-        aXstart = @x1
-        aYstart = @y1
-        aXend = @x2
-        aYend = @y2
-        bXstart = seg.x1
-        bYstart = seg.y1
-        bXend = seg.x2
-        bYend = seg.y2
+        bXstart = @x1
+        bYstart = @y1
+        bXend = @x2
+        bYend = @y2
+        aXstart = seg.x1
+        aYstart = seg.y1
+        aXend = seg.x2
+        aYend = seg.y2
       end
       if real_close(aXend,bXstart)
         Point.new(aXend,aYend) # just touching

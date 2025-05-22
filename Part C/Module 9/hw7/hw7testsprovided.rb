@@ -170,3 +170,42 @@ end
 
 
 
+#Failed tests
+f1a =  Intersect.new(LineSegment.new(0.0,0.0,2.5,1.5), Line.new(1.0,-1.0))
+f1 = Intersect.new(
+  Point.new(2.5,1.5),
+  Intersect.new(
+    LineSegment.new(2.0,1.0,3.0,2.0),
+    f1a)
+)
+f1Eval = f1a.eval_prog([])
+if not (f1Eval.x == 2.5 and f1Eval.y == 1.5)
+  puts "Should be point 2.5 1.5"
+end
+
+
+f2 = Line.new(5.0,2.0).intersect(Line.new(7.0,-1.0))
+if not (f2.x == 1.5 and f2.y == 9.5)
+  puts "Should be point 1.5 9.5"
+end
+
+f3 = Line.new(5.0,0.0).intersectLineSegment(LineSegment.new(1.0,5.0,2.0,2.0))
+if not (f3.x == 1.0 and f3.y == 5.0)
+  puts "Should be point 1.0 5.0"
+end
+
+
+f4 = VerticalLine.new(2.0).intersectLineSegment(LineSegment.new(-1.0,-1.0,3.0,3.0))
+if not (f4.x == 2.0 and f4.y == 2.0)
+  puts "Should be point 2.0 2.0"
+end
+
+f5 = LineSegment.new(2.0,3.0,4.0,9.0).intersectLineSegment(LineSegment.new(0.0,-3.0,6.0,15.0))
+if not (f5.x1 == 2.0 and f5.y1 == 3.0 and f5.x2 == 4.0 and f5.y2 == 9.0)
+  puts "Should be line segment 2.0 3.0 4.0 9.0"
+end
+
+f6 = LineSegment.new(1.0,1.0,4.0,1.0).intersectLineSegment(LineSegment.new(3.0,0.0,3.0,2.0))
+if not (f6.x == 3.0 and f6.y == 1.0)
+  puts "Should be point 3.0 1.0"
+end
