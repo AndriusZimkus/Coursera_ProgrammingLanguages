@@ -1,7 +1,7 @@
 # University of Washington, Programming Languages, Homework 7, 
 # hw7testsprovided.rb
 
-require "./hw7.rb"
+require "./hw7d.rb"
 
 # Will not work completely until you implement all the classes and their methods
 
