@@ -1,0 +1,49 @@
+1.
+Incorrect 8/12:
+Without let*let*start verbatim, let*, end verbatim-expressions, Racket programmers could just use nested letletstart verbatim, let, end verbatim-expressions, but the result would have more parentheses.
+It is a run-time error for the first argument to an ififstart verbatim, if, end verbatim-expression not to be a boolean.
+A function call always evaluates each argument exactly once, but a macro use may not evaluate each argument exactly once.
+
+2.
+Incorrect: Calls to longer-strings will never terminate because the function bound to f is returning a procedure somewhere where it needs to return a call to the procedure.
+
+3.+ It takes a stream and returns a stream that is like the stream it takes except all #f#fstart verbatim, #f, end verbatim elements are removed.
+
+
+4.+ Code A evaluates e1 once whereas Code B evaluates e1 once every time the function bound to f is called
+
+5.
+- The case for variables is wrong because we should recursively call eval-under-enveval-under-envstart verbatim, eval-under-env, end verbatim in this case.
+
+
+6.
+Incorrect 10/12:
+(define (f1 x) (if x 37 42))
+(define (f2 x) (if x x x))
+(define (f5 x) (+ (car x) 42))
+
+
+7. 10/10
++ Static typing catches some simple bugs without having to test your code.
++ Static typing can produce faster code because the language implementation does not need to perform
+
+8. 9/9
++ It is possible to define a class B such that evaluating B new m2
++ It is possible to define a class B such that evaluating B new m4
+
+9. 4/4
++ Because the each method for the object created by MyRange.new(4,2) never calls its block.
+
+10.
+12/14:
+In Ruby, anything returned by a method is an object.
+A Ruby mixin method included in a class can get and set instance variables of self
+
+11. + Memoization
+12. + Have the initialize method in class A store a copy of its argument 
+
+13.
+10/14:
+f1 {a=3, b=4, c=5}
+f2 {a=3, c={x=4, y=5, z=6}, b=7}
+f4 f1

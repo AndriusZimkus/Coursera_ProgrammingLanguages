@@ -36,3 +36,9 @@
 (define nats3 (stream-maker + 1 ))
 (define powers-of-two2 (stream-maker * 2))
 
+(define (twice-each s)
+  (lambda ()
+    (let ([pr (s)])
+      (cons (car pr)
+            (cons (car pr)
+                  (twice-each (cdr pr)))))))
