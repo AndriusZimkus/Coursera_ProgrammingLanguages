@@ -15,8 +15,8 @@ A function call always evaluates each argument exactly once, but a macro use may
 6.
 (define (f1 x) (if x 37 42))
 (define (f2 x) (if x x x))
+(define (f4 x) (car null))	
 (define (f5 x) (+ (car x) 42))
-(define (f4 x) (car null))
 
 7. 10/10
 + Static typing catches some simple bugs without having to test your code.
@@ -30,30 +30,15 @@ A function call always evaluates each argument exactly once, but a macro use may
 + Because the each method for the object created by MyRange.new(4,2) never calls its block.
 
 10. 14/14
+In Ruby, you cannot store a block in an array, but you can pass a block to lambda
 In Ruby, anything returned by a method is an object.
 A Ruby mixin method included in a class can get and set instance variables of self
-In Ruby, you cannot store a block in an array, but you can pass a block t
+
 
 11. + Memoization
 12. + Have the initialize method in class A store a copy of its argument 
 
 13.
-13.1.
-10/14:
 f1 {a=3, b=4, c=5}
-f2 {a=3, c={x=4, y=5, z=6}, b=7}
-f4 f1
-
-13.2.
-10/14
-f1 {a=3, b=4, c=5}
-f2 {a=3, c={x=4, y=5, z=6}, b=7}
 f1 (f3 4) (* call f1 with result of call (f3 4) *)
-
-13.3.
-10/14
-f1 {a=3, b=4, c=5}
-f2 {a=3, c={x=4, y=5, z=6}, b=7}
 f4 f1
-f1 (f3 4) (* call f1 with result of call (f3 4) *)
--f4 f3
